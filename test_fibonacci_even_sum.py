@@ -8,6 +8,7 @@ read_limit_from_console, read_limit_from_file, main (CLI).
 Запуск (из папки проекта):
     python test_fibonacci_even_sum.py
     python -m unittest -v
+    pytest -v
 """
 import contextlib
 import io
@@ -232,6 +233,12 @@ class MainTests(TempDirCase):
         self.assertEqual(code, 1)
         self.assertIn("Ошибка", err)
         self.assertFalse(self.dst.exists())
+        # TC-26: ввод закрыт (Ctrl+D / Ctrl+Z) или прерван (Ctrl+C) в консольном режиме
+        for exc in (EOFError(), KeyboardInterrupt()):
+            code, out, err = run_main(["--console"], inputs=[exc])
+            self.assertEqual(code, 1, msg=repr(exc))
+            self.assertIn("Ошибка", err + out, msg=repr(exc))
+            self.assertNotIn("Traceback", err + out, msg=repr(exc))
 
     def test_no_arguments_starts_gui_and_handles_missing_tkinter(self):
         with mock.patch.object(prog, "run_gui") as gui:
