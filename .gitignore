@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Резервные копии проекта
+backups/
+*.zip
+
+# Результаты профилирования
+*.lprof
+*.prof
+scalene_report.json
+profiling/scalene_report.html
+profiling/scalene_report.json
+profiling/profile_output.*
+
+# Служебные файлы
+.idea/
+.vscode/
+.DS_Store
