@@ -30,8 +30,8 @@
 - резервное копирование в ZIP с манифестом SHA-256, проверка целостности и
   безопасное восстановление;
 - 51 автоматический тест (unittest) и CI на GitHub Actions;
-- сценарии профилирования: timeit, cProfile, line_profiler, tracemalloc,
-  memory_profiler, yappi, py-spy, Scalene.
+- сценарии профилирования встроенными средствами Python: timeit, cProfile,
+  tracemalloc.
 
 ## Структура проекта
 
@@ -52,12 +52,6 @@ Practica/
 ├── profiling/
 │   ├── demo_program.py            # демо-программа для профилирования
 │   ├── run_benchmarks.py          # timeit + cProfile + tracemalloc
-│   ├── line_demo.py               # line_profiler
-│   ├── mem_demo.py                # memory_profiler
-│   ├── yappi_demo.py              # yappi (потоки)
-│   ├── spin.py                    # целевой процесс для py-spy
-│   ├── scalene_demo.py            # Scalene
-│   ├── flame.svg                  # flame-graph (py-spy)
 │   └── Результаты_профилирования.md
 └── examples/
     └── input.txt                  # пример входного файла
@@ -143,12 +137,14 @@ black --check src tests          # проверка код-стайла
 ## Профилирование
 
 ```bash
-python profiling/run_benchmarks.py                        # timeit + cProfile + tracemalloc
-kernprof -l -v profiling/line_demo.py                     # построчное время
-python -m memory_profiler profiling/mem_demo.py           # построчная память
-python profiling/yappi_demo.py                            # многопоточность
-py-spy record -o profiling/flame.svg --duration 5 -- python profiling/spin.py
-scalene run profiling/scalene_demo.py --outfile profiling/scalene_report.html
+python profiling/run_benchmarks.py   # timeit + cProfile + tracemalloc одним запуском
+```
+
+Отдельные инструменты встроены в Python и запускаются напрямую:
+
+```bash
+python -m cProfile -s tottime profiling/demo_program.py   # время по функциям
+python -m timeit -n 10 -r 5 "..."                          # микро-замер выражения
 ```
 
 Полные результаты и выводы — в
@@ -205,8 +201,7 @@ integrity checks was developed.
   (Ctrl+D/Ctrl+Z), unwritable output paths — no tracebacks, exit code 1;
 - ZIP backups with a SHA-256 manifest, integrity verification, safe restore;
 - 51 automated tests (unittest) and GitHub Actions CI;
-- profiling scripts: timeit, cProfile, line_profiler, tracemalloc,
-  memory_profiler, yappi, py-spy, Scalene.
+- profiling scripts: timeit, cProfile, tracemalloc (Python standard library).
 
 ## Project structure
 
